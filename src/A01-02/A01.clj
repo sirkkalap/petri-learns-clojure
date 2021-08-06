@@ -93,7 +93,7 @@ silly-string
 
 ;(str *1 " - " silly-string)
 
-(dir clojure.string)
+;(dir clojure.string)
 
 (type 10000000000000000000)
 
@@ -107,7 +107,7 @@ silly-string
 (Math/sqrt 9)
 (Math/round 0.7)
 
-(doc clojure.string/replace)
+;(doc clojure.string/replace)
 (clojure.string/replace "Hello, World" #"\w" (fn [letter] (do (println letter) "!")))
 (int \a)
 (first (char-array "a"))
@@ -198,7 +198,7 @@ silly-string
 (conj supported-currencies "Monopoly Money")
 (conj supported-currencies "Monopoly Money" "Gold dragon" "Gil")
 (disj supported-currencies "Dollar" "British pound")
-(dir clojure.set)
+;(dir clojure.set)
 (conj '(1 2) 3)
 (disj '(1 2 3) 2)                                           ; Exception
 
@@ -398,3 +398,75 @@ alphabet
 (insert :bar {:id 1 :name "Jaska"} :id)
 
 ; 3 Functions in Depth
+(defn print-coords [coords]
+  (let [lat (coords 0)
+        lon (coords 1)]
+    (println (str "Latitude: " lat " - " "Longitude: " lon))))
+(print-coords [48.44 22.21 102])
+
+(defn print-coords2 [coords]
+  (let [[lat lon alt] coords]
+    (if alt
+      (println (str "Latitude: " lat " - " "Longitude: " lon " - Altitude: " alt))
+      (println (str "Latitude: " lat " - " "Longitude: " lon)))))
+(print-coords2 [48.23 12.2 100])
+(print-coords2 [48.23 12.2])
+
+(defn print-icao-cords1 [airport]
+  (let [{lat :lat lon :lon icao :icao} airport]
+    (println (str icao " is located at Latitude: " lat " - " "Longitude: " lon))))
+
+(defn print-icao-cords2 [airport]
+  (let [{:keys [lat lon icao]} airport]
+    (println (str icao " is located at Latitude: " lat " - " "Longitude: " lon))))
+(print-icao-cords2 {:lat 44.4 :lon 12.2 :icao "EDDA"})
+
+; Sequential Destructuring
+
+(def booking [1425, "Bob Smith", "Allergic to unsalted peanuts only", [[48.9615, 2.4372], [37.742, -25.6976]], [[37.742, -25.6976], [48.9615, 2.4372]]])
+
+(let [[id customer-name sensitive-info flight1 flight2 flight3] booking]
+  (println id customer-name flight1 flight2 flight3))
+
+(defn print-flight [flight]
+  (let [[departure arrival] flight
+        [lat1 lon1] departure
+        [lat2 lon2] arrival]
+    (println (str "Flying from: Lat " lat1 " Lon " lon1
+                  " Flying to: Lat " lat2 " Lon " lon2))))
+
+(let [big-booking (conj booking [[37.742, -25.6976], [51.1537, 0.1821]]
+                        [[51.1537, 0.1821], [48.9615, 2.4372]])
+      [_ customer-name _ & flights] big-booking]
+  (println customer-name " booked " (count flights) " flights."))
+
+(print-flight [[48.9615, 2.4372], [37.742 -25.6976]])
+
+(defn print-booking [booking]
+  (let [[_ customer-name _ & flights] booking]
+    (println (str customer-name " booked " (count flights) " flights."))
+    (let [[flight1 flight2 flight3] flights]
+      (when flight1 (print-flight flight1))
+      (when flight2 (print-flight flight2))
+      (when flight3 (print-flight flight3)))))
+
+(print-booking booking)
+
+; Associative destructuring
+
+(def mapjet-booking
+  {
+   :id 8773
+   :customer-name "Alice Smith"
+   :catering-notes "Vegetarian on Sundays"
+   :flights [
+             {
+              :from {:lat 48.9615 :lon 2.4372 :name "Paris Le Bourget Airport"},
+              :to {:lat 37.742 :lon -25.6976 :name "Ponta Delgada Airport"}},
+             {
+              :from {:lat 37.742 :lon -25.6976 :name "Ponta Delgada Airport"},
+              :to {:lat 48.9615 :lon 2.4372 :name "Paris Le Bourget Airport"}}
+             ]
+   })
+
+;(let )
