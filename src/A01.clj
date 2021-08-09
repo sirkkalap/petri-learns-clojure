@@ -470,3 +470,35 @@ alphabet
    })
 
 ;(let )
+
+(let [{:keys [customer-name flights]} mapjet-booking]
+  (println customer-name "booked" (count flights) "flights"))
+
+(defn print-mapjet-flight
+  [flight]
+  (let [{:keys [from to]} flight
+        {lat1 :lat lon1 :lon} from
+        {lat2 :lat lon2 :lon} to]
+    (println (str "Flying from: Lat " lat1 " Lon " lon1 " to Lat " lat2 " Lon " lon2))))
+
+(defn print-mapjet-flight2
+  [flight]
+  (let [{{lat1 :lat lon1 :lon} :from,
+         {lat2 :lat lon2 :lon} :to} flight]
+    (println (str "Flying from: Lat " lat1 " Lon " lon1 " to Lat " lat2 " Lon " lon2))))
+(print-mapjet-flight (first (:flights mapjet-booking)))
+(print-mapjet-flight2 (first (:flights mapjet-booking)))
+
+(with-out-str (print "kekek" (+ 1 1)))
+
+(defn print-mapjet-booking
+  [booking]
+  (let [{:keys [customer-name flights]} booking]
+    (println (str customer-name " booked " (count flights) " flights."))
+    (let [[flight1 flight2 flight3] flights]
+      (when flight1 (print-mapjet-flight2 flight1))
+      (when flight2 (print-mapjet-flight2 flight2))
+      (when flight3 (print-mapjet-flight2 flight3)))))
+
+(print-mapjet-booking mapjet-booking)
+
