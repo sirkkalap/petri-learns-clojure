@@ -502,3 +502,113 @@ alphabet
 
 (print-mapjet-booking mapjet-booking)
 
+; Destructuring Function Parameters
+
+(defn print-flight3
+  [[[lat1 lon1] [lat2 lon2]]]
+  (println (str "Flying from: Lat " lat1 " Lon " lon1 " to Lat " lat2 " Lon " lon2)))
+
+(let [[_ _ _ & flights] booking] (print-flight3 (first flights)))
+
+; Arity Overloading
+
+(defn no-overloading []
+  (println "Same old, same old..."))
+
+(defn overloading
+  ([] "No argument")
+  ([a] (str "One argument: " a))
+  ([a b] (str "Two arguments: a: " a " b: " b)))
+
+(overloading)
+(overloading 1)
+(overloading 1 2)
+(overloading 1 2 3)                                         ; Exception
+
+(def weapon-damage {:fists 10 :staff 35 :sword 100 :cast-iron-saucepan 150})
+(defn strike
+  ([enemy] (strike enemy :fists))
+  ([enemy weapon]
+   (let [damage (weapon weapon-damage)]
+     (update enemy :health - damage))))
+
+(strike {:name "n00b-hunter" :health 100})
+(strike {:name "n00b-hunter" :health 100} :sword)
+(strike {:name "n00b-hunter" :health 100} :cast-iron-saucepan)
+
+; Variadic Functions
+(str "Concatenating " "is " "difficult " "to " "spell " "but " "easy " "to " "use!")
+
+(defn welcome
+  [player & friends]
+  (println (str "Welcome to the Parenthmazes " player "!"))
+  (when (seq friends)
+    (println (str "Sending " (count friends)
+                  " friend request(s) tot the following players: "
+                  (clojure.string/join ", " friends)))))
+
+(welcome "Jon")
+(welcome "Jon" "Arya" "Tyrion" "Petyr")
+
+(defn welcome
+  ([player] (println (str "Welcome to the Parenthmazes " player "!")))
+  ([player & friends] (println (str "Sending " (count friends)
+                                    " friend request(s) tot the following players: "
+                                    (clojure.string/join ", " friends)))))
+(welcome "Jon")
+(welcome "Jon" "Arya" "Tyrion" "Petyr")
+
+(doc welcome)
+
+; Exercise 3.03: Multi-arity and Destructuring with Parenthmazes
+(def weapon-damage {:fists 10.0 :staff 35.0 :sword 100.0 :cast-iron-saucepan 150.0})
+(defn strike
+  "Strike function that handles healing when the enemy is in the same camp as us"
+  ([target weapon]
+   (let [points (weapon weapon-damage)]
+     (if (= :gnomes (:camp target))
+       (update target :health + points)
+       (update target :health - points)))))
+(def enemy {:name "Zulkaz", :health 150.0, :camp :trolls})
+(strike enemy :sword)
+(def ally {:name "Carla" :health 115.0 :camp :gnomes})
+(strike ally :staff)
+(defn strike
+  "As above, but now with armor"
+  ([target weapon]
+   (let [points (weapon weapon-damage)]
+     (if (= :gnomes (:camp target))
+       (update target :health + points)
+       (let [armor (or (:armor target) 0)
+             damage (* points (- 1 armor))]
+         (update target :health - damage))))))
+(strike enemy :cast-iron-saucepan)
+(def enemy {:name "Zulkaz" :health 220.0 :armor 0.8 :camp :trolls})
+(strike enemy :cast-iron-saucepan)
+
+(defn strike
+  "Now with associative destructuring and :as binding of `target`"
+  ([{:keys [camp armor] :as target} weapon]
+   (let [points (weapon weapon-damage)]
+     (if (= :gnomes camp)
+       (update target :health + points)
+       (let [damage (* points (- 1 (or armor 0)))]
+         (update target :health - damage))))))
+
+(strike enemy :cast-iron-saucepan)
+(defn strike
+  "With one argument, strike a target with a default :fists `weapon`. With two argument, strike a target with `weapon`.
+   Strike will heal a target that belongs to the gnomes camp."
+  ([target] (strike target :fists))
+  ([{:keys [camp armor], :or {armor 0}, :as target} weapon]
+   (let [points (weapon weapon-damage)]
+     (if (= :gnomes camp)
+       (update target :health + points)
+       (let [damage (* points (- 1 armor))]
+         (update target :health - damage))))))
+
+(strike enemy)
+(strike enemy :cast-iron-saucepan)
+(strike ally :staff)
+
+
