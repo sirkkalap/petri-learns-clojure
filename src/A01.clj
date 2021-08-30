@@ -611,4 +611,30 @@ alphabet
 (strike enemy :cast-iron-saucepan)
 (strike ally :staff)
 
+; Higher order functions
+(update {:item "Tomato" :price 1.0} :price / 2)
+(update {:item "Tomato" :fruit false} :fruit not)
 
+(defn operate [f x] (f x))
+(operate inc 2)
+(defn operate [f x] (let [oldoperate operate]
+                      (println (str "operate f: " f " x:" x))
+                      ( oldoperate f x )))
+(operate inc 2)                                             ; Stack overflow
+
+(defn operate [f & args] (f args))
+(operate + 1 2 3)                                           ; Exception
+(+ [1 2 3])                                                 ; Same exception
+(apply + [ 1 2 3])
+(defn operate [f & args] (apply f args))
+(operate + 1 2 3)
+( operate str "It " "Should " "Concatenate!")
+(defn random-fn [] (first (shuffle [+ - * /])))
+(operate (random-fn) 2 3)
+(fn? random-fn)
+(fn? (random-fn))
+
+(let [mysterious-fn (random-fn)]
+  (mysterious-fn 2 3))
+
+; Partial
