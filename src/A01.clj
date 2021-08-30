@@ -661,5 +661,79 @@ alphabet
 (def checkout (comp (partial str "Only ") format-price marketing-adder))
 (checkout 12 234 23 5)
 
+; Anonymous function literal #() (Use sparingly because numbered parameters hinder reading.)
 
+(fn [s] (str "Hello " s))
+#(str "Hello " %)
+(fn [x y] (* (+ x 10) (+ y 20)))
+#(* (+ %1 10) (+ %2 20))
+(#(str %1 " " %2 " " %3) "First" "Second" "Third")
 
+; Exercise 3.04: High-Order Functions with Parenthmazes
+
+(def weapon-fn-map
+  {:fists (fn [health] (if (< health 100) (- health 10) health))})
+((weapon-fn-map :fists) 150)
+((weapon-fn-map :fists) 50)
+
+(def weapon-fn-map
+  {
+   :fists (fn [health] (if (< health 100) (- health 10) health))
+   :staff (partial + 35)
+   })
+
+((weapon-fn-map :staff) 150)
+(def weapon-fn-map
+  {
+   :fists (fn [health] (if (< health 100) (- health 10) health))
+   :staff (partial + 35)
+   :sword #(- % 100)
+   })
+
+((weapon-fn-map :sword) 150)
+
+(def weapon-fn-map
+  {
+   :fists (fn [health] (if (< health 100) (- health 10) health))
+   :staff (partial + 35)
+   :sword #(- % 100)
+   :cast-iron-saucepan #(- % 100 (rand-int 50))
+   })
+
+((weapon-fn-map :cast-iron-saucepan) 200)
+
+(source identity)
+
+(def weapon-fn-map
+  {
+   :fists (fn [health] (if (< health 100) (- health 10) health))
+   :staff (partial + 35)
+   :sword #(- % 100)
+   :cast-iron-saucepan #(- % 100 (rand-int 50))
+   :sweet-potato identity
+   })
+
+(defn strike
+  "With one argument, strike a target with a default :fists `weapon`. With tro argument, strike a target with `weapon` and returnthe target entity"
+  ([target] (strike target :fists))
+  ([target weapon]
+   (let [weapon-fn (weapon weapon-fn-map)]
+     (update target :health weapon-fn))))
+
+(def enemy {:name "Arnold", :health 250})
+(strike enemy :sweet-potato)
+(strike enemy :sword)
+(strike enemy :cast-iron-saucepan)
+(strike (strike enemy :sword) :cast-iron-saucepan)
+
+(update enemy :health (comp (:sword weapon-fn-map) (:cast-iron-saucepan weapon-fn-map)))
+
+(defn mighty-strike
+  "Strike a `target` with all weapons!"
+  [target]
+  (let [weapon-fn (apply comp (vals weapon-fn-map))]
+    (update target :health weapon-fn)))
+
+(mighty-strike enemy)
+
+; Multimethods (Polymorphism)
