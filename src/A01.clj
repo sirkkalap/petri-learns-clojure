@@ -737,3 +737,39 @@ alphabet
 (mighty-strike enemy)
 
 ; Multimethods (Polymorphism)
+
+(defmulti strike (fn [m] (get m :weapon)))
+(defmulti strike :weapon)                                   ;Returns nil because namespace has strike multi mapped
+(ns-unmap 'user 'strike)
+(defmulti strike :weapon)
+(defmethod strike :sword
+  [{{:keys [:health]} :target}]
+  (- health 100))
+
+(defmethod strike :cast-iron-saucepan
+  [{{:keys [:health]} :target}]
+  (- health 100 (rand-int 50)))
+
+(strike {:weapon :sword :target {:health 200}})
+(strike {:weapon :cast-iron-saucepan :target {:health 200}})
+(strike {:weapon :spoon :target {:health 200}})             ;IllegalArgumentException
+
+(defmethod strike :default [{{:keys [:health]} :target}] health)
+
+(strike {:weapon :spoon :target {:health 200}})
+
+(ns-unmap 'user 'strike)
+
+(defmulti strike (fn
+                   [{{:keys [:health]} :target weapon :weapon}]
+                   (if (< health 50) :finisher weapon)))
+(defmethod strike :finisher [_] 0)
+(defmethod strike :sword
+  [{{:keys [:health]} :target}]
+  (- health 100))
+(defmethod strike :default [{{:keys [:health]} :target}] health)
+(strike {:weapon :sword :target {:health 200}})
+(strike {:weapon :spoon :target {:health 30}})
+
+; Excercise 3.05: Using Multimethods
+
