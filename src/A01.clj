@@ -638,3 +638,28 @@ alphabet
   (mysterious-fn 2 3))
 
 ; Partial
+
+(def marketing-adder (partial + 0.99))
+(marketing-adder 10 5)
+
+(def format-price (partial str "€"))
+(format-price "100")
+(format-price 10 50)
+
+; Compose
+(let [a 1] (println a) (println " :)"))
+
+(defn sample [coll] (first (shuffle coll)))
+
+(sample [1 2 3])
+
+(def sample (comp first shuffle))
+
+((comp inc * ) 2 2 )
+((comp * inc) 2 2 )                                         ;ArityException
+
+(def checkout (comp (partial str "Only ") format-price marketing-adder))
+(checkout 12 234 23 5)
+
+
+
