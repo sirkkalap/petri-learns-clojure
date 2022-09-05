@@ -773,3 +773,40 @@ alphabet
 
 ; Excercise 3.05: Using Multimethods
 
+; 11. Macros
+(defmacro minimal-macro []
+  '(println "I'm your macro overlord!"))
+(minimal-macro)
+(defn minimal-function []
+  (println "I'm trapped inside a function!"))
+(minimal-function)
+
+(macroexpand '(minimal-function))
+(macroexpand '(minimal-macro))
+
+(defmacro mistaken-macro []
+  (println "I'm your mistaken macro overlord!"))
+
+(repeat 3 '(println "Macroni"))
+
+(cons 'do (repeat 3 '(println "Macro")))
+
+(defmacro multi-minimal [n-times]
+  (cons 'do (repeat 3 '(println "Macro"))))
+
+(multi-minimal 4)
+
+(macroexpand '(multi-minimal 4))
+
+(defmacro parameterized-multi-macro [n-times s]
+  (concat (list 'let ['string-to-print s])
+    (repeat n-times '(println string-to-print))))
+
+(parameterized-multi-macro 3 "My string")
+
+(defmacro parameterized-with-syntax [n-times s]
+  `(do ~@(repeat n-times `(println ~s))))
+
+(parameterized-with-syntax 3 "A string")
+
+(macroexpand '(parameterized-with-syntax 3 "A string"))
