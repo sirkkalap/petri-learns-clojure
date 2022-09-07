@@ -836,3 +836,13 @@ alphabet
   (= 5 5 5))
 
 (macroexpand-1 '(and-ors (> 5 3) (= 6 6) | (> 6 3) | (= 5 5 5)))
+
+; Exercise 11.02: An Automatic HTML Library
+
+(defmacro define-html-tags [& tags]
+  `(do
+     ~@(map (fn [tagname]
+              `(def ~(symbol tagname) (tag-fn ~tagname)))
+         tags)))
+
+(define-html-tags "h1" "h2")
