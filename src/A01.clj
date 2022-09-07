@@ -810,3 +810,29 @@ alphabet
 (parameterized-with-syntax 3 "A string")
 
 (macroexpand '(parameterized-with-syntax 3 "A string"))
+
+; Exercise 11.01: The and-ors Macro
+
+(partition-by (partial = '|) [1 2 '| 3 4])
+
+(remove #(= '(|) %) '((1 2) (|) (3 4)))
+(remove (partial = '(|)) '((1 2) (|) (3 4)))
+
+(defmacro and-ors [& or-exprs]
+  (let [groups (remove (partial = '(|)) (partition-by (partial = '|) or-exprs))]
+    `(and
+
+       ~@(map (fn [g] `(or ~@g)) groups))))
+
+(and-ors (> 5 3) (= 6 6) | (> 6 3) | (= 5 5 5))
+
+(and-ors
+  (and-ors (= 3 3) | (= 5 5) (= 6 8))
+  |
+  (> 5 3) (= 6 6)
+  |
+  (> 6 3)
+  |
+  (= 5 5 5))
+
+(macroexpand-1 '(and-ors (> 5 3) (= 6 6) | (> 6 3) | (= 5 5 5)))
