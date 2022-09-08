@@ -839,6 +839,9 @@ alphabet
 
 ; Exercise 11.02: An Automatic HTML Library
 
+(defn tag-fn [tag]
+  (fn [& content] (str tag content tag)))
+
 (defmacro define-html-tags [& tags]
   `(do
      ~@(map (fn [tagname]
@@ -846,3 +849,5 @@ alphabet
          tags)))
 
 (define-html-tags "h1" "h2")
+
+(h1 "hi" "ho")
