@@ -194,4 +194,9 @@
     "video")
   "wbr")
 
-
+(defn subtag-fn [tagname subtag]
+  (fn [content]
+    (str
+      (->opening-tag tagname nil)
+      (apply str (map subtag content))
+      (->end-tag tagname))))
