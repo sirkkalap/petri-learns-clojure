@@ -62,9 +62,6 @@
               `(def ~(symbol tagname) (tag-fn ~tagname)))
          tags)))
 
-
-(define-html-tags "h1" "h2" "h3" "h4" "h5" "p" "div" "span")
-
 ;;;
 ;;; Define functions for all the HTML 5 tags
 ;;;
@@ -195,8 +192,32 @@
   "wbr")
 
 (defn subtag-fn [tagname subtag]
-  (fn [content]
-    (str
-      (->opening-tag tagname nil)
-      (apply str (map subtag content))
-      (->end-tag tagname))))
+  (fn subtag-function-builder
+    ([content]
+      (subtag-function-builder nil content))
+    ([attrs content]
+     (str
+       (->opening-tag tagname attrs)
+       (apply str (map subtag content))
+       (->end-tag tagname)))))
+
+(defmacro define-html-list-tags
+  "macro that will define functions such as ul->li"
+  [& tags-with-subtags]
+  `(do
+     ~@(map (fn [[tagname subtag]]
+              `(do
+                 (def ~(symbol tagname) (tag-fn ~tagname))
+                 (def ~(symbol (str tagname "->" subtag))
+                   (subtag-fn ~tagname ~(symbol subtag)))))
+         tags-with-subtags)))
+
+;;; Testing...
+(in-ns 'htmlgen.htmlgen)
+(define-html-tags "li" "h1" "h2" "h3" "h4" "h5" "p" "div" "span")
+((subtag-fn "ul" li) ["Item 1" "Item 2"])
+((subtag-fn "ul" li) {:class "my-class"} ["Item 1" "Item 2"])
+(macroexpand '(define-html-list-tags ["ul" "li"]))
+(define-html-list-tags ["ul" "li"] ["ol" "li"])
+(ol->li ["Item 1" "Item 2"])
+(ol->li {:class "my-class"} ["Item 1" "Item 2"])
