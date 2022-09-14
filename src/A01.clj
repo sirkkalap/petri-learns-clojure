@@ -892,7 +892,7 @@ alphabet
     `(~arg-list
        (let [start-time# (System/nanoTime)]
          (try
-           (let [result# (do ~fn-body)]
+           (let [result# (do ~@fn-body)]
              (~tx-fn {:name ~(name fn-name)
                       :client-id ~'client-id
                       :status :complete
