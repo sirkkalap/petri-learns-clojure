@@ -739,8 +739,8 @@ alphabet
 ; Multimethods (Polymorphism)
 
 (defmulti strike (fn [m] (get m :weapon)))
-(defmulti strike :weapon)                                   ;Returns nil because namespace has strike multi mapped
-(ns-unmap 'user 'strike)
+(defmulti strike :weapon) ;Returns nil because namespace has strike multi mapped
+(ns-unmap 'user 'strike) ; Unlike normal defs multimethods do not overwrite
 (defmulti strike :weapon)
 (defmethod strike :sword
   [{{:keys [:health]} :target}]
@@ -772,6 +772,24 @@ alphabet
 (strike {:weapon :spoon :target {:health 30}})
 
 ; Excercise 3.05: Using Multimethods
+(def player {:name "Lea" :health 200 :position {:x 10 :y 10 :facing :north}})
+(defmulti move #(:facing (:position %)))
+(ns-unmap 'user 'move)
+(defmulti move (comp :facing :position)) ; comp is so much better here
+(defmethod move :north [entity]
+  (update-in entity [:position :y] inc))
+(defmethod move :south [entity]
+  (update-in entity [:position :y] dec))
+(defmethod move :west [entity]
+  (update-in entity [:position :x] inc))
+(defmethod move :east [entity]
+  (update-in entity [:position :x] dec))
+(defmethod move :default [entity] entity)
+
+; Testing
+(move player)
+(move {:position {:x 10 :y 10 :facing :west}})
+(move {:position {:x 10 :y 10 :facing :wall}})
 
 ; 11. Macros
 (defmacro minimal-macro []
@@ -918,10 +936,27 @@ alphabet
        ~@(map (partial wrap-fn-body fn-name tx-fn) fn-bodies))))
 
 ; Testing
-(defmonitored my-func println [client-id m]  (assoc m :client client-id))
+(defmonitored my-func println [client-id m] (assoc m :client client-id))
 (my-func 32 {:data 123})
 
 (macroexpand '(def my-number# 5))
 ; => (def my-number# 5) ; Remember that # is only magic inside syntax quoting
 (macroexpand `(def my-number# 5))
 ; => (def my-number__2011__auto__ 5)
+
+; Gensyms do not nest!
+(defmacro fn-context [v & symbol-fn-pairs]
+  `(let [v# ~v]
+     ~@(map (fn [[sym f]]
+              `(defn ~sym [x#]
+                 (f v# x#))) (partition 2 symbol-fn-pairs))))
+(macroexpand-1 `(fn-context 5 adder + subtractor - multiplier *))
+
+; The fix
+(defmacro fn-context [v & symbol-fn-pairs]
+  (let [common-val-gensym (gensym "common-val-")]
+    `(let [~common-val-gensym ~v]
+       ~@(map (fn [[sym f]]
+                `(defn ~sym [x#]
+                   (~f ~common-val-gensym x#))) (partition 2 symbol-fn-pairs)))))
+
