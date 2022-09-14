@@ -921,7 +921,7 @@ alphabet
 (defmonitored my-func println [client-id m]  (assoc m :client client-id))
 (my-func 32 {:data 123})
 
-(macroexpand '(def my-number# 5)) ; Remember that # is only magic inside syntax quoting
-; => (def my-number# 5)
+(macroexpand '(def my-number# 5))
+; => (def my-number# 5) ; Remember that # is only magic inside syntax quoting
 (macroexpand `(def my-number# 5))
 ; => (def my-number__2011__auto__ 5)
