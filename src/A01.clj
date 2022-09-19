@@ -1,3 +1,4 @@
+(ns (:use clojure.test))
 (def base-co2 382)
 (def base-year 2006)
 
@@ -790,6 +791,101 @@ alphabet
 (move player)
 (move {:position {:x 10 :y 10 :facing :west}})
 (move {:position {:x 10 :y 10 :facing :wall}})
+
+; Activity 3.01: Building a Distance and Cost Calculator
+(defn itinerary
+  [{:keys [from to transport vehicle]}]
+  (let [d 1
+        c 1
+        dur 1]
+    {:distance d :cost c :duration dur}))
+
+; Testing
+(let [exp1 {:distance 1 :cost 10 :duration 1}
+      travel1 {:from {:lat 1 :lon 1} :to {:lat 2 :lon 2} :transport :foo :vehicle :car}]
+  (clojure.test/is (= exp1 (itinerary travel1))))
+
+; 4. Mapping and Filtering
+(map inc [1 2 3])
+
+; Ex 4.01 Working with map
+(map (fn [i] (* i 10)) [1 2 3 4 5])
+
+(map count ["Let's" "measure" "word" "length" "now"])
+(map (fn [w] (str w ": " (count w))) ["Let's" "measure" "word" "length" "now"])
+
+(filter keyword? ["a" :b "c" :d "e" :f "g"])
+
+; Ex 4.02 Getting Started with filter
+(odd? 5)
+(odd? 6)
+
+(filter odd? [1 2 3 4 5])
+(remove odd? [1 2 3 4 5])
+(filter (constantly true) [1 2 3 4 5])
+(filter (constantly false) [1 2 3 4 5])
+
+(take 3 [1 2 3 4 5])
+(drop 3 [1 2 3 4 5])
+
+(take-while #(> 10 %) [2 9 4 12 3 99 1])
+(drop-while #(> 10 %) [2 9 4 12 3 99 1])
+
+; Ex 4.03 Partitioning a Sequence with take-while and drop-while
+(def students [{:name "Eliza" :year 1994}
+               {:name "Salma" :year 1995}
+               {:name "Jodie" :year 1997}
+               {:name "Kaitlyn" :year 2000}
+               {:name "Alice" :year 2001}
+               {:name "Pippa" :year 2002}
+               {:name "Fleur" :year 2002}])
+
+(take-while #(< (:year %) 2000) students)
+(drop-while #(< (:year %) 2000) students)
+
+; Using map and filter Together
+(map (fn [n] (* 10 n))
+  (filter odd? [1 2 3 4 5]))
+
+; With threading
+(def filtered (filter odd? [1 2 3 4 5]))
+(->> [1 2 3 4 5]
+  (filter odd?)
+  (map (fn [n] (* 10 n))))
+
+; Using Lazy Sequences
+(range 1 6)
+(def our-seq (range 100))
+
+; Ex 4.04: Watching Lazy Evaluation
+
+(defn our-range [limit]
+  (take-while #(< % limit) (iterate inc 0)))
+
+(our-range 5)
+
+(map #(* 10 %) (our-range 5))
+(map (fn [i] (print ".") (* i 10)) (our-range 5))
+
+; use def to store the lazy sequence, instead of viewing it in the REPL:
+(def by-ten (map (fn [i] (print ".") (* i 10)) (our-range 5)))
+; by-ten
+
+(->> (range)
+  (map #(* 10 %))
+  (take 5))
+
+; Ex 4.05: Creating Our Own Lazy Sequence
+(def our-randoms (repeatedly (partial rand-int 100)))
+(take 20 our-randoms)
+(defn some-random-integers [size]
+  (take size (repeatedly (fn [] (rand-int 100)))))
+(some-random-integers 12)
+
+; Anonymous Functions
+
+; Ex 4.06: Extracting Data from a List of Maps
+
 
 ; 11. Macros
 (defmacro minimal-macro []
