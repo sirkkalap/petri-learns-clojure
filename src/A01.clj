@@ -946,6 +946,98 @@ alphabet
     :remaining-lives 1
     :experience-level 8
     :status :active}])
+(map (fn [player] (:current-points player)) game-users)
+(map :current-points game-users)
+
+; Sets as Predicates
+(def alpha-set (set [:a :b :c]))
+(alpha-set :z)
+(alpha-set :a)
+
+(hash-set :a :b :c)
+(def animal-names ["turtle" "horse" "cat" "frog" "hawk" "worm"])
+(remove (fn [animal-name]
+          (or (= animal-name "horse")
+            (= animal-name "cat")))
+  animal-names)
+(remove #{"horse" "cat"} animal-names)
+
+; Filtering on a Keyword with comp and a Set
+(require '[clojure.string :as string])
+(defn normalize [s] (string/trim (string/lower-case s)))
+(def normalizer (comp string/trim string/lower-case))
+(normalizer "  Some Information ")
+(def remove-words #{"and" "an" "a" "the" "of" "is"})
+(remove (comp remove-words string/lower-case string/trim) ["February" " THE " "4th"])
+
+; Ex 4.07: Using comp and a Set to Filter on a Keyword
+(map :current-score game-users)
+(map :current-points game-users)
+(def keep-statuses #{:active :imprisoned :speed-boost})
+(filter (fn [player] (keep-statuses (:status player))) game-users)
+
+(->> game-users
+  (filter (comp #{:active :imprisoned :speed-boost} :status))
+  (map :current-points))
+
+; Returning a List Longer than the Input with mapcat
+(def alpha-lc [ "a" "b" "c" "d" "e" "f" "g" "h" "i" "j"])
+(mapcat (fn [letter] [letter (clojure.string/upper-case letter)]) alpha-lc)
+
+; Mapping with Multiple Inputs
+(map (fn [a b] (+ a b)) [5 8 3 1 2] [5 2 7 9 8])
+(defn our-zipmap [xs ys]
+  (->> (map (fn [x y] [x y]) xs ys)
+    (into {})))
+(our-zipmap [:a :b :c] [1 2 3])
+
+; Tuples
+(def meals ["breakfast" "lunch" "dinner" "midnight snack"])
+(map (fn [idx meal] (str (inc idx) ". " meal)) (range) meals)
+(map-indexed (fn [idx meal] (str (inc idx) ". " meal)) meals)
+
+; Ex 4.08: Identifying Weather Trends
+(def temperature-by-day
+  [18 23 24 23 27 24 22 21 21 20 32 33 30 29 35 28 25 24 28 29 30])
+(map (fn [td yd] (cond
+                   (< td yd) :colder
+                   (> td yd) :warmer
+                   :else :unchanged)) (drop 1 temperature-by-day) temperature-by-day)
+
+; Consuming Extracted Data with apply
+(apply max [2 3 7])
+(let [a 5
+      b nil
+      c 18]
+  (+ a b c)) ; => NPE
+(let [a 5
+      b nil
+      c 18]
+  (apply + (filter integer? [a b c]))) ; Filter nil
+(apply min 0 [])
+
+; Ex 4.09: Finding the Average Weather Temperature
+(let [tot (apply + temperature-by-day)
+      c (count temperature-by-day)]
+  (/ tot c))
+
+; Activity 4.01: Using map and filter to Report Summary Information
+(defn min-max
+  "Returns the least and the greatest of the nums."
+  ([x] [x x])
+  ([x y] [(. clojure.lang.Numbers (min x y)) (. clojure.lang.Numbers (max x y))])
+  ([x y & more]
+   [(reduce max (max x y) more) (reduce max (max x y) more)]))
+
+(defn status [field status game-users]
+  (->> game-users
+    (filter status)
+    field
+    (apply min-max)))
+
+(status :current-points :active game-users)
+
+(min-max [1 2 3])
 
 ; 11. Macros
 (defmacro minimal-macro []
