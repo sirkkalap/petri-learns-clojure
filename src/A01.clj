@@ -1027,7 +1027,7 @@ alphabet
   ([x] [x x])
   ([x y] [(. clojure.lang.Numbers (min x y)) (. clojure.lang.Numbers (max x y))])
   ([x y & more]
-   [(reduce max (max x y) more) (reduce max (max x y) more)]))
+   [(reduce min-max (min-max x y) more) (reduce min-max (min-max x y) more)]))
 
 (defn status [field status game-users]
   (->> game-users
@@ -1037,7 +1037,34 @@ alphabet
 
 (status :current-points :active game-users)
 
-(min-max [1 2 3])
+; Testing
+(min-max [1 2 3])  ; Well that did not work at all and actually was not needed either
+
+; Importing a Dataset from a CSV File
+; Ex 4.10: Importing Data from a CSV File
+(require '[clojure.data.csv :as csv])
+(require '[clojure.java.io :as io])
+(with-open [r (io/reader "match_scores_1991-2016_unindexed_csv.csv")]
+  (first (csv/read-csv r)))
+(with-open [r (io/reader "match_scores_1991-2016_unindexed_csv.csv")]
+  (count (csv/read-csv r)))
+
+; Real-World Laziness
+; Ex 4.11: Avoiding Lazy Evaluation Traps with Files
+(with-open [r (io/reader "match_scores_1991-2016_unindexed_csv.csv")]
+  (->> (csv/read-csv r)
+    (map #(nth % 7))
+    (take 6))) ; => Error: Stream closed
+; Add doall
+(with-open [r (io/reader "match_scores_1991-2016_unindexed_csv.csv")]
+  (->> (csv/read-csv r)
+    (map #(nth % 7))
+    (take 6)
+    doall))
+
+; Ex 4.12: Parsing CSV with semantic-csv
+; -> tennis.clj
+
 
 ; 11. Macros
 (defmacro minimal-macro []
