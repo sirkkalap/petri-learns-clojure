@@ -7,9 +7,9 @@
 
 (defn serena-williams-win-loss-streaks [matches]
   (:matches
-    (reduce (fn [{:keys [current-wins current-losses] :as acc} match]
+    (reduce (fn [{:keys [current-wins current-losses] :as acc} {:keys [winner-name] :as match}]
               (let [this-match (assoc match :current-streak (streak-string current-wins current-losses))
-                    serena-victory? (= (:winner-name match) "Williams S.")]
+                    serena-victory? (= winner-name "Williams S.")]
                 (-> acc
                   (update :matches #(conj % this-match))
                   (assoc :current-wins (if serena-victory?
@@ -22,10 +22,3 @@
        :current-wins 0
        :current-losses 0}
       matches)))
-
-(fn [{:keys [current-wins current-losses] :as acc}
-     {:keys [winner-name] :as match}]
-  (let [this-match (assoc match :current-streak (streak-string current-wins current-losses))]
-    (update acc :matches #(conj % this-match))))
-
-serena-victory? (= winner-name "Williams S.")
