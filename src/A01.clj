@@ -1207,6 +1207,25 @@ alphabet
 
 (into {} (map (fn [[k v]] [k (* v 10)]) letters-and-numbers))
 
+; group-by
+(def dishes
+  [{:name "Carrot Cake"
+    :course :dessert}
+   {:name "French Fries"
+    :course :main}
+   {:name "Celery"
+    :course :appetizer}
+   {:name "Salmon"
+    :course :main}
+   {:name "Rice"
+    :course :main}
+   {:name "Ice Cream"
+    :course :dessert}])
+(group-by :course dishes)
+
+; Ex 5.05: Quick Summary Statistics with group-by
+
+
 ; 11. Macros
 (defmacro minimal-macro []
   '(println "I'm your macro overlord!"))
