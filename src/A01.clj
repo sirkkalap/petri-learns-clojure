@@ -1158,8 +1158,54 @@ alphabet
 
 ; Ex 5.04: Creating a Lookup Table with zipmap
 ; kvitova_matches.clj
-; (map :date matches)
+(def matches
+  [{:winner-name "Kvitova P.",
+    :loser-name "Ostapenko J.",
+    :tournament "US Open",
+    :location "New York",
+    :date "2016-08-29"}
+   {:winner-name "Kvitova P.",
+    :loser-name "Buyukakcay C.",
+    :tournament "US Open",
+    :location "New York",
+    :date "2016-08-31"}
+   {:winner-name "Kvitova P.",
+    :loser-name "Svitolina E.",
+    :tournament "US Open",
+    :location "New York",
+    :date "2016-09-02"}
+   {:winner-name "Kerber A.",
+    :loser-name "Kvitova P.",
+    :tournament "US Open",
+    :location "New York",
+    :date "2016-09-05"}
+   {:winner-name "Kvitova P.",
+    :loser-name "Brengle M.",
+    :tournament "Toray Pan Pacific Open",
+    :location "Tokyo",
+    :date "2016-09-20"}
+   {:winner-name "Puig M.",
+    :loser-name "Kvitova P.",
+    :tournament "Toray Pan Pacific Open",
+    :location "Tokyo",
+    :date "2016-09-21"}])
 
+(def matches-by-date (zipmap (map :date matches) matches))
+
+; Testing
+(map :date matches)
+(get matches-by-date "2016-09-20")
+
+; Maps to Sequences, and Back Again
+(into {} [[:a 1] [:b 2]])
+(seq {:a 1 :b 2})
+(def letters-and-numbers {:a 5 :b 18 :c 35})
+(reduce (fn [acc k]
+          (assoc acc k (* 10 (get letters-and-numbers k))))
+  {}
+  (keys letters-and-numbers))
+
+(into {} (map (fn [[k v]] [k (* v 10)]) letters-and-numbers))
 
 ; 11. Macros
 (defmacro minimal-macro []
