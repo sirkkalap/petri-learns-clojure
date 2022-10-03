@@ -776,7 +776,7 @@ alphabet
 (def player {:name "Lea" :health 200 :position {:x 10 :y 10 :facing :north}})
 (defmulti move #(:facing (:position %)))
 (ns-unmap 'user 'move)
-(defmulti move (comp :facing :position)) ; comp is so much better here
+(defmulti move (comp :facing :position)) ; comp is so much better here F o G -> f(g(x))
 (defmethod move :north [entity]
   (update-in entity [:position :y] inc))
 (defmethod move :south [entity]
