@@ -1095,6 +1095,58 @@ alphabet
             max-day-so-far))
   weather-days)
 
+(reduce (fn [{:keys [minimum maximum]} new-number]
+          {:minimum (if (and minimum (> new-number minimum))
+                      minimum
+                      new-number)
+           :maximum (if (and maximum (< new-number maximum))
+                      maximum
+                      new-number)})
+  {}          ;; <---- The new argument!
+  [5 23 5004 845 22])
+
+(reduce (fn [{:keys [segments current] :as accum} n]
+          (let [current-with-n (conj current n)
+                total-with-n (apply + current-with-n)]
+            (if (> total-with-n 20)
+              (assoc accum
+                :segments (conj segments current)
+                :current [n])
+              (assoc accum :current current-with-n))))
+  {:segments [] :current []}
+  [4 19 4 9 5 12 5 3 4 1 1 9 5 18])
+
+(defn segment-by-sum [limit ns]
+  (let [result (reduce (fn [{:keys [segments current] :as accum} n]
+                         (let [current-with-n (conj current n)
+                               total-with-n (apply + current-with-n)]
+                           (if (> total-with-n limit)
+                             (assoc accum
+                               :segments (conj segments current)
+                               :current [n])
+                             (assoc accum :current current-with-n))))
+                 {:segments [] :current []}
+                 ns)]
+    (conj (:segments result) (:current result))))
+(segment-by-sum 20 [4 19 4 9 5 12 5 3 4 1 1 9 5 18])
+
+; Looking Back with reduce
+(def numbers [4 9 2 3 7 9 5 2 6 1 4 6 2 3 3 6 1])
+(defn parity-totals [ns]
+  (:ret
+    (reduce (fn [{:keys [current] :as acc} n]
+              (if (and (seq current)
+                    (or (and (odd? (last current)) (odd? n))
+                      (and (even? (last current)) (even? n))))
+                (-> acc
+                  (update :ret conj [n (apply + current)])
+                  (update :current conj n))
+                (-> acc
+                  (update :ret conj [n 0])
+                  (assoc :current [n]))))
+      {:current [] :ret []}
+      ns)))
+(parity-totals numbers)
 
 ; 11. Macros
 (defmacro minimal-macro []
