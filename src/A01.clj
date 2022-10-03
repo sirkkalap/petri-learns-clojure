@@ -1148,6 +1148,13 @@ alphabet
       ns)))
 (parity-totals numbers)
 
+; Ex 5.03: Winning and Losing Streaks
+; => tennis-reduce.cls
+
+; Reducing without reduce
+
+(zipmap [:a :b :c] [0 1 2])
+
 ; 11. Macros
 (defmacro minimal-macro []
   '(println "I'm your macro overlord!"))
