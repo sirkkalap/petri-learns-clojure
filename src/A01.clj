@@ -1,4 +1,3 @@
-(ns (:use clojure.test))
 (def base-co2 382)
 (def base-year 2006)
 
@@ -185,7 +184,7 @@ silly-string
 
 ; HashSets
 #{1 2 3 4 5}
-#{:a :a :b :c}
+#{:a :b :c}
 (hash-set :a :b :c :d)
 (set [:a :b :c])
 (set ["No" "Copy" "Cats" "Cats" "Please"])
@@ -195,13 +194,13 @@ silly-string
 (get supported-currencies "Dollar")
 (contains? supported-currencies "Dollar")
 (supported-currencies "Swiss franc")
-("Dollar" supported-currencies)                             ; Exception
+;("Dollar" supported-currencies)                             ; Exception
 (conj supported-currencies "Monopoly Money")
 (conj supported-currencies "Monopoly Money" "Gold dragon" "Gil")
 (disj supported-currencies "Dollar" "British pound")
 ;(dir clojure.set)
 (conj '(1 2) 3)
-(disj '(1 2 3) 2)                                           ; Exception
+;(disj '(1 2 3) 2)                                           ; Exception
 
 ; Vectors
 [1 2 3]
@@ -218,7 +217,7 @@ silly-string
   last-number (last fibonacci)
   second-to-last-number (fibonacci (- size 2))]
   (conj fibonacci (+ last-number second-to-last-number)))
-(1 2 3)                                                     ; Exception
+;(1 2 3)                                                     ; Exception
 '(+ 1 2 3)
 (list :a :b :c)
 (first '(:a :b :c :d))
@@ -524,7 +523,7 @@ alphabet
 (overloading)
 (overloading 1)
 (overloading 1 2)
-(overloading 1 2 3)                                         ; Exception
+;(overloading 1 2 3)                                         ; Exception
 
 (def weapon-damage {:fists 10 :staff 35 :sword 100 :cast-iron-saucepan 150})
 (defn strike
@@ -545,21 +544,21 @@ alphabet
   (println (str "Welcome to the Parenthmazes " player "!"))
   (when (seq friends)
     (println (str "Sending " (count friends)
-                  " friend request(s) tot the following players: "
-                  (clojure.string/join ", " friends)))))
+               " friend request(s) tot the following players: "
+               (clojure.string/join ", " friends)))))
 
-(welcome "Jon")
-(welcome "Jon" "Arya" "Tyrion" "Petyr")
+;(welcome "Jon")
+;(welcome "Jon" "Arya" "Tyrion" "Petyr")
 
 (defn welcome
   ([player] (println (str "Welcome to the Parenthmazes " player "!")))
   ([player & friends] (println (str "Sending " (count friends)
-                                    " friend request(s) tot the following players: "
-                                    (clojure.string/join ", " friends)))))
-(welcome "Jon")
-(welcome "Jon" "Arya" "Tyrion" "Petyr")
+                                 " friend request(s) tot the following players: "
+                                 (clojure.string/join ", " friends)))))
+;(welcome "Jon")
+;(welcome "Jon" "Arya" "Tyrion" "Petyr")
 
-(doc welcome)
+;(doc welcome)
 
 ; Exercise 3.03: Multi-arity and Destructuring with Parenthmazes
 (def weapon-damage {:fists 10.0 :staff 35.0 :sword 100.0 :cast-iron-saucepan 150.0})
@@ -620,16 +619,16 @@ alphabet
 (operate inc 2)
 (defn operate [f x] (let [oldoperate operate]
                       (println (str "operate f: " f " x:" x))
-                      ( oldoperate f x )))
-(operate inc 2)                                             ; Stack overflow
+                      (oldoperate f x)))
+;(operate inc 2)                                             ; Stack overflow
 
 (defn operate [f & args] (f args))
-(operate + 1 2 3)                                           ; Exception
-(+ [1 2 3])                                                 ; Same exception
-(apply + [ 1 2 3])
+;(operate + 1 2 3)                                           ; Exception
+;(+ [1 2 3])                                                 ; Same exception
+(apply + [1 2 3])
 (defn operate [f & args] (apply f args))
 (operate + 1 2 3)
-( operate str "It " "Should " "Concatenate!")
+(operate str "It " "Should " "Concatenate!")
 (defn random-fn [] (first (shuffle [+ - * /])))
 (operate (random-fn) 2 3)
 (fn? random-fn)
@@ -657,7 +656,7 @@ alphabet
 (def sample (comp first shuffle))
 
 ((comp inc * ) 2 2 )
-((comp * inc) 2 2 )                                         ;ArityException
+;((comp * inc) 2 2 )                                         ;ArityException
 
 (def checkout (comp (partial str "Only ") format-price marketing-adder))
 (checkout 12 234 23 5)
@@ -753,7 +752,7 @@ alphabet
 
 (strike {:weapon :sword :target {:health 200}})
 (strike {:weapon :cast-iron-saucepan :target {:health 200}})
-(strike {:weapon :spoon :target {:health 200}})             ;IllegalArgumentException
+;(strike {:weapon :spoon :target {:health 200}})             ;IllegalArgumentException
 
 (defmethod strike :default [{{:keys [:health]} :target}] health)
 
@@ -1009,7 +1008,8 @@ alphabet
 (let [a 5
       b nil
       c 18]
-  (+ a b c)) ; => NPE
+  ;  (+ a b c) ; => NPE
+  )
 (let [a 5
       b nil
       c 18]
@@ -1033,7 +1033,8 @@ alphabet
   (->> game-users
     (filter status)
     field
-    (apply min-max)))
+    ;    (apply min-max)
+    ))
 
 (status :current-points :active game-users)
 
@@ -1154,6 +1155,11 @@ alphabet
 ; Reducing without reduce
 
 (zipmap [:a :b :c] [0 1 2])
+
+; Ex 5.04: Creating a Lookup Table with zipmap
+; kvitova_matches.clj
+; (map :date matches)
+
 
 ; 11. Macros
 (defmacro minimal-macro []
@@ -1326,14 +1332,13 @@ alphabet
 
 
 ;Mika Wordcount (fastest)
-
-(defn count-words-optimized [source]
-  (->> source io/reader line-seq
-    (transduce
-      (comp
-        (mapcat #(str/split % #"\s+"))
-        (map str/lower-case))
-      (completing #(update!! %1 %2 (fnil inc 0))) (HashMap.))
-    (sort-by val >)
-    (map #(str (key %) " " (val %)))
-    (str/join "\n") println))
+;(defn count-words-optimized [source]
+;  (->> source io/reader line-seq
+;    (transduce
+;      (comp
+;        (mapcat #(clojure.string/split % #"\s+"))
+;        (map clojure.string/lower-case))
+;      (completing #(update!! %1 %2 (fnil inc 0))) (HashMap.))
+;    (sort-by val >)
+;    (map #(str (key %) " " (val %)))
+;    (clojure.string/join "\n") println)))
