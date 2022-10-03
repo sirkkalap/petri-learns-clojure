@@ -1317,3 +1317,16 @@ alphabet
                 `(defn ~sym [x#]
                    (~f ~common-val-gensym x#))) (partition 2 symbol-fn-pairs)))))
 
+
+;Mika Wordcount (fastest)
+
+(defn count-words-optimized [source]
+  (->> source io/reader line-seq
+    (transduce
+      (comp
+        (mapcat #(str/split % #"\s+"))
+        (map str/lower-case))
+      (completing #(update!! %1 %2 (fnil inc 0))) (HashMap.))
+    (sort-by val >)
+    (map #(str (key %) " " (val %)))
+    (str/join "\n") println))
