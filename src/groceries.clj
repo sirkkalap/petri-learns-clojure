@@ -57,8 +57,11 @@
 (full-bag? '())
 
 (defn bag-sequences* [{:keys [current-bag bags] :as acc} stream]
-  ;; TODO: write code
-  )
+  (cond
+    (not stream)
+    (conj bags current-bag)
+    ;; TODO: the other cond branches
+    ))
 (defn bag-sequences [stream]
   (bag-sequences* {:bags []
                    :current-bag []} stream))
