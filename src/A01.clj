@@ -1223,8 +1223,22 @@ alphabet
     :course :dessert}])
 (group-by :course dishes)
 
-; Ex 5.05: Quick Summary Statistics with group-by
-
+; 6. Recursion and Looping
+(doseq [n (range 5)]
+  (println (str "Line " n)))
+; Looping Shortcuts
+(take 5 (repeat "myself"))
+(zipmap [:score :hits :friends :level :energy :boost] (repeat 0))
+(take 10 (repeatedly (partial rand-int 100)))
+(repeatedly 10 (partial rand-int 100))
+(defn savings [principal yearly-rate]
+  (let [monthly-rate (+ 1 (/ yearly-rate 12))]
+    (iterate (fn [p] (* p monthly-rate)) principal)))
+(take 13 (savings 1000 0.01))
+; Ex 6.01: An Endless Stream of Groceries
+; -> groceries.clj
+; Ex 6.02: Partitioning Grocery Bags
+; -> groceries.clj
 
 ; 11. Macros
 (defmacro minimal-macro []
