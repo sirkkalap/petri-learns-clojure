@@ -60,7 +60,12 @@
   (cond
     (not stream)
     (conj bags current-bag)
-    ;; TODO: the other cond branches
+    (full-bag? (conj current-bag (first stream)))
+    (bag-sequences* (assoc acc
+                      :current-bag [(first stream)]
+                      :bags (conj bags current-bag))
+      (next stream))
+    ;; TODO: one more branch, for when the bag is not full yet
     ))
 (defn bag-sequences [stream]
   (bag-sequences* {:bags []
