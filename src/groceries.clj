@@ -45,3 +45,20 @@
 (next '())
 
 ; Ex 6.02: Partitioning Grocery Bags
+(defn full-bag? [items]
+  (let [weight (apply + (map :weight items))
+        size (apply + (map :max-dimension items))]
+    (or (> weight 3200)
+      (> size 800))))
+
+(full-bag? (article-stream 10))
+(full-bag? (article-stream 1))
+(full-bag? (article-stream 1000))
+(full-bag? '())
+
+(defn bag-sequences* [{:keys [current-bag bags] :as acc} stream]
+  ;; TODO: write code
+  )
+(defn bag-sequences [stream]
+  (bag-sequences* {:bags []
+                   :current-bag []} stream))
