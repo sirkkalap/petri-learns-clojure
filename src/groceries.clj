@@ -72,3 +72,5 @@
 (defn bag-sequences [stream]
   (bag-sequences* {:bags []
                    :current-bag []} stream))
+; Testing
+(bag-sequences (article-stream 12))
