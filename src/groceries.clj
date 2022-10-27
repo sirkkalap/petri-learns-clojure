@@ -98,3 +98,21 @@
 (def bags (robust-bag-sequences (article-stream 1E6)))
 (count bags)
 (first bags)
+
+; What about loop?
+(def process identity)
+(defn grocery-verification [input-items]
+  (loop [remaining-items input-items
+         processed-items []]
+    (if (not (seq remaining-items))
+      processed-items
+      (recur (next remaining-items)
+        (conj processed-items (process (first remaining-items)))))))
+
+; Ex 6.04: Groceries with loop
+(defn looping-robust-bag-sequences [stream]
+  (loop [remaining-stream stream
+         acc {:current-bag []
+              :bags []}]
+    ;;TODO: the real work
+    ))
