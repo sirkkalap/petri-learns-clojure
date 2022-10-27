@@ -1241,6 +1241,11 @@ alphabet
 ; -> groceries.clj
 
 ; Recur limitations
+#_(defn naive-tree-sum [so-far x]
+  (cond (not x) so-far
+        (integer? (first x)) (recur (+ so-far (first x)) (next x))
+        (or (seq? (first x)) (vector? (first x)))
+        (recur (recur so-far (first x)) (next x)))) ;; Warning!!!
 
 (defn less-naive-tree-sum [so-far x]
   (cond (not x) so-far
