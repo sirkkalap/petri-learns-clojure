@@ -1242,6 +1242,14 @@ alphabet
 ; Ex 6.03: Large-Scale Grocery Partitioning with recur
 ; -> groceries.clj
 
+; Recur limitations
+
+(defn less-naive-tree-sum [so-far x]
+  (cond (not x) so-far
+        (integer? (first x)) (less-naive-tree-sum (+ so-far (first x)) (next x))
+        (or (seq? (first x)) (vector? (first x)))
+        (less-naive-tree-sum (less-naive-tree-sum so-far (first x)) (next x))))
+
 ; 11. Macros
 (defmacro minimal-macro []
   '(println "I'm your macro overlord!"))
