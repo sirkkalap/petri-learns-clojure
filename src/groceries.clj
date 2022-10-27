@@ -74,3 +74,27 @@
                    :current-bag []} stream))
 ; Testing
 (bag-sequences (article-stream 12))
+; Testing in production ;)
+; -> Stack Overflow (def production-bags (bag-sequences (article-stream 10000)))
+
+(defn robust-bag-sequences* [{:keys [current-bag bags] :as acc} stream]
+  (cond
+    (not stream)
+    (conj bags current-bag)
+    (full-bag? (conj current-bag (first stream)))
+    (recur (assoc acc
+             :current-bag [(first stream)]
+             :bags (conj bags current-bag))
+      (next stream))
+    :otherwise-bag-not-full
+    (recur (assoc acc :current-bag (conj current-bag (first stream)))
+      (next stream))))
+
+(defn robust-bag-sequences [stream]
+  (robust-bag-sequences* {:bags []
+                          :current-bag []} stream))
+
+; Testing
+(def bags (robust-bag-sequences (article-stream 1E6)))
+(count bags)
+(first bags)

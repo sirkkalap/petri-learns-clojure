@@ -1239,6 +1239,8 @@ alphabet
 ; -> groceries.clj
 ; Ex 6.02: Partitioning Grocery Bags
 ; -> groceries.clj
+; Ex 6.03: Large-Scale Grocery Partitioning with recur
+; -> groceries.clj
 
 ; 11. Macros
 (defmacro minimal-macro []
