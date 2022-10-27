@@ -702,8 +702,6 @@ alphabet
 
 ((weapon-fn-map :cast-iron-saucepan) 200)
 
-(source identity)
-
 (def weapon-fn-map
   {
    :fists (fn [health] (if (< health 100) (- health 10) health))
