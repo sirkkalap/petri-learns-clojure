@@ -114,5 +114,19 @@
   (loop [remaining-stream stream
          acc {:current-bag []
               :bags []}]
-    ;;TODO: the real work
-    ))
+    (let [{:keys [current-bag bags]} acc]
+      (cond (not remaining-stream)
+            (conj bags current-bag)
+            (full-bag? (conj current-bag (first remaining-stream)))
+            (recur (next remaining-stream)
+              (assoc acc
+                :current-bag [(first remaining-stream)]
+                :bags (conj bags current-bag)))
+            :otherwise-bag-not-full
+            (recur (next remaining-stream)
+              (assoc acc :current-bag (conj current-bag (first remaining-stream))))))))
+
+; Testing
+(def bags (looping-robust-bag-sequences (article-stream 1E6)))
+(count bags)
+(looping-robust-bag-sequences (article-stream 8))
