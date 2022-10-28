@@ -1253,6 +1253,9 @@ alphabet
         (or (seq? (first x)) (vector? (first x)))
         (less-naive-tree-sum (less-naive-tree-sum so-far (first x)) (next x))))
 
+; Ex 6.05: Europe by Train
+; -> train_routes.clj
+
 ; 11. Macros
 (defmacro minimal-macro []
   '(println "I'm your macro overlord!"))
