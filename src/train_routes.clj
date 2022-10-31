@@ -33,4 +33,44 @@
   [routes]
   (->> routes
     (group-by first)))
+
+; Testing
 (:paris (grouped-routes routes))
+
+(defn route-list->distance-map [route-list]
+  (->> route-list
+    (map (fn [[_ city cost]] [city cost]))
+    (into {})))
+
+; Testing
+(route-list->distance-map [[:paris :milan 129]
+                           [:paris :frankfurt 121]])
+
+(defn grouped-routes
+  [routes]
+  (->> routes
+    (group-by first)
+    (map (fn [[k v]] [k (route-list->distance-map v)]))
+    (into {})))
+
+; Testing
+(:paris (grouped-routes routes))
+
+(defn grouped-routes
+  [routes]
+  (->> routes
+    (mapcat (fn [[origin-city dest-city cost :as r]]
+              [r [dest-city origin-city cost]]))
+    (group-by first)
+    (map (fn [[k v]] [k (route-list->distance-map v)]))
+    (into {})))
+
+; Testing
+(:paris (grouped-routes routes))
+
+(def lookup (grouped-routes routes))
+
+; Testing
+(get-in lookup [:paris :madrid])
+(get-in lookup [:madrid :paris])
+(get-in lookup [:paris :bratislava]) ; Route does not exist -> nil

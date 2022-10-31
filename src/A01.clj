@@ -1255,6 +1255,8 @@ alphabet
 
 ; Ex 6.05: Europe by Train
 ; -> train_routes.clj
+; Ex 6.06: The Search Function
+; -> train_routes.clj
 
 ; 11. Macros
 (defmacro minimal-macro []
