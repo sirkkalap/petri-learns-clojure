@@ -74,3 +74,10 @@
 (get-in lookup [:paris :madrid])
 (get-in lookup [:madrid :paris])
 (get-in lookup [:paris :bratislava]) ; Route does not exist -> nil
+
+(defn find-path* [route-lookup destination path]
+  ;; TODO: write code
+  )
+(defn find-path [route-lookup origin destination]
+  ;; TODO: write code
+  )
