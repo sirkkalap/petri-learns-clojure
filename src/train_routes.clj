@@ -87,7 +87,10 @@
         (when-not (empty? from-here)
           (->> from-here
             (map (fn [pos] (find-path* route-lookup destination (conj path pos))))
-            (remove empty?)))))))
+            (remove empty?)
+            (mapcat (fn [x] (if (keyword? (first x))
+                              [x]
+                              x)))))))))
 (defn find-path [route-lookup origin destination]
   (find-path* route-lookup destination [origin]))
 
@@ -120,3 +123,4 @@
                                        [:geneva :rome 100]
                                        [:milan :rome 100]]))
 (find-path* even-more-routes :rome [:paris])
+(find-path* lookup :rome [:paris])
