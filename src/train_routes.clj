@@ -124,3 +124,32 @@
                                        [:milan :rome 100]]))
 (find-path* even-more-routes :rome [:paris])
 (find-path* lookup :rome [:paris])
+
+(defn cost-of-route
+  [route-lookup route]
+  (apply +
+    (map (fn [start end]
+           (get-in route-lookup [start end]))
+      route
+      (next route))))
+
+; Testing
+(cost-of-route lookup [:london :paris :amsterdam :berlin :warsaw])
+(cost-of-route lookup [:london])
+
+(defn min-route [route-lookup routes]
+  (reduce (fn [current-best route]
+            (let [cost (cost-of-route route-lookup route)]
+              (if (or (< cost (:cost current-best))
+                    (= 0 (:cost current-best)))
+                {:cost cost :best route}
+                current-best)))
+    {:cost 0 :best [(ffirst routes)]}
+    routes))
+(defn find-path [route-lookup origin destination]
+  (min-route route-lookup (find-path* route-lookup destination [origin])))
+
+; Testing
+(find-path lookup :paris :rome) ; 224
+(find-path lookup :paris :berlin) ; 291
+(find-path lookup :warsaw :sevilla) ; 720

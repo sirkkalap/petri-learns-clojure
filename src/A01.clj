@@ -1257,6 +1257,8 @@ alphabet
 ; -> train_routes.clj
 ; Ex 6.06: The Search Function
 ; -> train_routes.clj
+; Ex 6.07: Calculating the Costs of the Routes
+; -> train_routes.clj
 
 ; 11. Macros
 (defmacro minimal-macro []
