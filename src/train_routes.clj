@@ -81,8 +81,13 @@
       (= position destination) path
       (get-in route-lookup [position destination])
       (conj path destination)
-      ;; TODO: still not there
-      )))
+      :otherwise-we-search
+      (let [path-set (set path)
+            from-here (remove path-set (keys (get route-lookup position)))]
+        (when-not (empty? from-here)
+          (->> from-here
+            (map (fn [pos] (find-path* route-lookup destination (conj path pos))))
+            (remove empty?)))))))
 (defn find-path [route-lookup origin destination]
   (find-path* route-lookup destination [origin]))
 
@@ -90,3 +95,28 @@
 (find-path* lookup :sevilla [:sevilla])
 (find-path lookup :sevilla :sevilla)
 (find-path* lookup :madrid [:sevilla]) ; One hop
+; Test whether a city is already in our path (let [path-set...])
+(set [:amsterdam :paris :milan])
+((set [:amsterdam :paris :milan]) :berlin)
+((set [:amsterdam :paris :milan]) :paris)
+(def small-routes (grouped-routes [[:paris :milan 100]
+                                   [:paris :geneva 100]
+                                   [:geneva :rome 100]
+                                   [:milan :rome 100]]))
+(find-path* small-routes :rome [:paris])
+(def more-routes (grouped-routes [[:paris :milan 100]
+                                  [:paris :geneva 100]
+                                  [:paris :barcelona 100]
+                                  [:barcelona :milan 100]
+                                  [:geneva :rome 100]
+                                  [:milan :rome 100]]))
+(find-path* more-routes :rome [:paris])
+(def even-more-routes (grouped-routes [[:paris :milan 100]
+                                       [:paris :geneva 100]
+                                       [:paris :barcelona 100]
+                                       [:barcelona :madrid 100]
+                                       [:madrid :milan 100]
+                                       [:barcelona :milan 100]
+                                       [:geneva :rome 100]
+                                       [:milan :rome 100]]))
+(find-path* even-more-routes :rome [:paris])
