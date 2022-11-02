@@ -76,8 +76,12 @@
 (get-in lookup [:paris :bratislava]) ; Route does not exist -> nil
 
 (defn find-path* [route-lookup destination path]
-  ;; TODO: write code
-  )
+  (let [position (last path)]
+    (cond
+      (= position destination) path
+      (get-in route-lookup [position destination])
+      (conj path destination)
+      ;; TODO: still not there
+      )))
 (defn find-path [route-lookup origin destination]
-  ;; TODO: write code
-  )
+  (find-path* route-lookup destination [origin]))
