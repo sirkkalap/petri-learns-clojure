@@ -85,3 +85,8 @@
       )))
 (defn find-path [route-lookup origin destination]
   (find-path* route-lookup destination [origin]))
+
+; Testing
+(find-path* lookup :sevilla [:sevilla])
+(find-path lookup :sevilla :sevilla)
+(find-path* lookup :madrid [:sevilla]) ; One hop
