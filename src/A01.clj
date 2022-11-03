@@ -1294,13 +1294,17 @@ alphabet
   (lazy-seq
     (let [current-series (take 3 data)]
       (cond (< (count current-series) 3)
-            :no-more-data-so-stop
+            '()
             (local-max? current-series)
-            :peak
+            (cons
+              (conj (second current-series) :peak)
+              (inflection-points (rest data)))
             (local-min? current-series)
-            :valley
+            (cons
+              (conj (second current-series) :valley)
+              (inflection-points (rest data)))
             :otherwise
-            :neither-so-keep-moving))))
+            (inflection-points (rest data))))))
 
 
 ; 11. Macros
