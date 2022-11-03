@@ -1286,6 +1286,21 @@ alphabet
   (and (< a b) (< c b)))
 (defn local-min? [[[a _] [b _] [c _]]]
   (and (> a b) (> c b)))
+(local-max? (take 3 sample-data))
+(local-min? (take 3 sample-data))
+(local-min? (take 3 (drop 2 sample-data)))
+
+(defn inflection-points [data]
+  (lazy-seq
+    (let [current-series (take 3 data)]
+      (cond (< (count current-series) 3)
+            :no-more-data-so-stop
+            (local-max? current-series)
+            :peak
+            (local-min? current-series)
+            :valley
+            :otherwise
+            :neither-so-keep-moving))))
 
 
 ; 11. Macros
