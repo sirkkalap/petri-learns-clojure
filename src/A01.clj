@@ -1260,6 +1260,34 @@ alphabet
 ; Ex 6.07: Calculating the Costs of the Routes
 ; -> train_routes.clj
 
+; 7. Recursion II: Lazy Sequences
+; A Simple Lazy Sequence
+(defn iterate-range [] (iterate inc 0))
+(take 5 (iterate-range))
+(defn our-range [n]
+  (lazy-seq ; Thanks to lazy-seq, the recursive call becomes a reference.
+    (cons n (our-range (inc n)))))
+(take 5 (our-range 0))
+; Ex 7.01: Finding Inflection Points
+(def sample-data
+  [[24.2 420031]
+   [25.8 492657]
+   [25.9 589014]                        ;max
+   [23.8 691995]                        ;min
+   [24.7 734902]                        ;max
+   [23.2 794243]
+   [23.1 836204]                        ;min
+   [23.5 884120]])
+(defn local-max? [[a b c]]
+  (and (< (first a) (first b)) (< (first c) (first b))))
+(defn local-min? [[a b c]]
+  (and (> (first a) (first b)) (> (first c) (first b))))
+(defn local-max? [[[a _] [b _] [c _]]]
+  (and (< a b) (< c b)))
+(defn local-min? [[[a _] [b _] [c _]]]
+  (and (> a b) (> c b)))
+
+
 ; 11. Macros
 (defmacro minimal-macro []
   '(println "I'm your macro overlord!"))
