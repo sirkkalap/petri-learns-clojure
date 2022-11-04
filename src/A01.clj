@@ -1309,6 +1309,17 @@ alphabet
 (inflection-points sample-data)
 (take 15 (inflection-points (cycle sample-data)))
 
+; Ex 7.02: Calculating a Running Average
+; Endless source of random potatoes
+(def endless-potatoes (repeatedly (fn [] (+ 10 (rand-int 390)))))
+(take 5 endless-potatoes)
+(take 10 endless-potatoes) ; First five will be same!
+(take 20 endless-potatoes) ; First 10 will be the same!
+
+(defn average-potatoes [prev arrivals]
+  (lazy-seq
+    ))
+
 
 ; 11. Macros
 (defmacro minimal-macro []
