@@ -1318,7 +1318,15 @@ alphabet
 
 (defn average-potatoes [prev arrivals]
   (lazy-seq
-    ))
+    (if-not arrivals
+      '()
+      (let [[_ n total] prev
+            current [(first arrivals)
+                     (inc (or n 0))
+                     (+ (first arrivals) (or total 0))]]
+        ;; TODO recursion
+        ))))
+
 
 
 ; 11. Macros
