@@ -1305,6 +1305,9 @@ alphabet
               (inflection-points (rest data)))
             :otherwise
             (inflection-points (rest data))))))
+; Testing
+(inflection-points sample-data)
+(take 15 (inflection-points (cycle sample-data)))
 
 
 ; 11. Macros
