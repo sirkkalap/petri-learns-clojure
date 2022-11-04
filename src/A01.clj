@@ -1324,8 +1324,15 @@ alphabet
             current [(first arrivals)
                      (inc (or n 0))
                      (+ (first arrivals) (or total 0))]]
-        ;; TODO recursion
-        ))))
+        (cons
+          current
+          (average-potatoes
+            current
+            (next arrivals)))))))
+
+; Testing
+(take 3 (average-potatoes '() endless-potatoes))
+(last (take 500000 (average-potatoes '() endless-potatoes)))
 
 
 
