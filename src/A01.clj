@@ -1334,6 +1334,19 @@ alphabet
 (take 3 (average-potatoes '() endless-potatoes))
 (last (take 500000 (average-potatoes '() endless-potatoes)))
 
+; Lazy Consumption of Data
+#_(->> xs
+  (map some-func)
+  (reduce some-reducing-func)
+  (filter some-predicate?))
+
+#_(->> xs
+  (map some-func)
+  (filter some-predicate?)
+  (take-while another-predicate?)
+  (reduce +))
+
+(nth (filter even? (range)) 3)
 
 
 ; 11. Macros
