@@ -1337,16 +1337,25 @@ alphabet
 ; Lazy Consumption of Data
 #_(->> xs
   (map some-func)
-  (reduce some-reducing-func)
-  (filter some-predicate?))
+    (reduce some-reducing-func)
+    (filter some-predicate?))
 
 #_(->> xs
-  (map some-func)
-  (filter some-predicate?)
-  (take-while another-predicate?)
-  (reduce +))
+    (map some-func)
+    (filter some-predicate?)
+    (take-while another-predicate?)
+    (reduce +))
 
 (nth (filter even? (range)) 3)
+#_(filter even? (range)) ;; infinite loop
+(nth (filter even? (range)) 7000000)
+;; If a program maintains a reference to the beginning of a sequence,
+;; then it can no longer be garbage collected. Often, this won't matter,
+;; but with very long sequences, it becomes an important consideration.
+;; Throughout this chapter, you may notice that we often repeat expressions
+;; such as (first my-seq) inside a function when it might be tempting
+;; to use a local let binding instead. This is a way of avoiding
+;; references that would prevent a sequence from being garbage collected.
 
 
 ; 11. Macros
