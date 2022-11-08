@@ -1357,6 +1357,9 @@ alphabet
 ;; to use a local let binding instead. This is a way of avoiding
 ;; references that would prevent a sequence from being garbage collected.
 
+; Lazy Trees
+; Ex 7.03: A Tennis History Tree
+; -> tennis_tree.clj
 
 ; 11. Macros
 (defmacro minimal-macro []
