@@ -1,7 +1,7 @@
 (ns tennis-tree
-  (:require [clojure.math.numeric-tower :as math]
+  (:require [clojure.data.csv :as csv]
             [clojure.java.io :as io]
-            [clojure.data.csv :as csv]
+            [clojure.math.numeric-tower :as math]
             [semantic-csv.core :as sc]))
 
 (defn match-probability [player-1-rating player-2-rating]
@@ -50,12 +50,23 @@
 (player-in-match? (first ratings) "gael-monfils")
 (player-in-match? (first ratings) "boris-becker")
 
-(defn match-tree-by-player [m player-name]
+(defn match-tree-by-player [m player-slug]
   (lazy-seq
-    #_(cond (empty? m)
-          ;; No more matches
-          (player-in-match? (first m) player-name)
-          ;; Build the tree!
+    (cond (empty? m)
+          '()
+          (player-in-match? (first m) player-slug)
+          (cons (first m)
+            (cons
+              [(match-tree-by-player (rest m) (:winner_slug (first m)))
+               (match-tree-by-player (rest m) (:loser_slug (first m)))]
+              '()))
           ::otherwise
-          ;; Keep walking through the tree
-          )))
+          (match-tree-by-player (rest m) player-slug))))
+
+; Testing
+(match-tree-by-player ratings "non-tennis-player")
+(def federer (match-tree-by-player ratings "roger-federer"))
+(type federer) ; LazySeq
+(:winner_rating (first federer))
+(count federer) ; 2 (Count won't traverse a tree)
+(realized? (first (second federer)))
