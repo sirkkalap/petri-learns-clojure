@@ -11,7 +11,7 @@
 (defn recalculate-rating [k previous-rating expected-outcome real-outcome]
   (+ previous-rating (* k (- real-outcome expected-outcome))))
 
-(defn elo-world-simple
+(defn elo-db
   ([csv k]
    (with-open [r (io/reader csv)]
      (->> (csv/read-csv r)
@@ -25,24 +25,20 @@
                  (let [winner-rating (get players winner_slug 400)
                        loser-rating (get players loser_slug 400)
                        winner-probability (match-probability winner-rating loser-rating)
-                       loser-probability (- 1 winner-probability)
-                       predictable-match? (not= winner-rating loser-rating)
-                       prediction-correct? (> winner-rating loser-rating)
-                       correct-predictions (if (and predictable-match? prediction-correct?)
-                                             (inc (:correct-predictions acc))
-                                             (:correct-predictions acc))
-                       predictable-matches (if predictable-match?
-                                             (inc (:predictable-match-count acc))
-                                             (:predictable-match-count acc))]
+                       loser-probability (- 1 winner-probability)]
 
                    (-> acc
-                     (assoc :predictable-match-count predictable-matches)
-                     (assoc :correct-predictions correct-predictions)
                      (assoc-in [:players winner_slug] (recalculate-rating k winner-rating winner-probability 1))
                      (assoc-in [:players loser_slug] (recalculate-rating k loser-rating loser-probability 0))
-                     (update :match-count inc))))
+                     (update :matches (fn [ms]
+                                        (conj ms (assoc match
+                                                   :winner_rating winner-rating
+                                                   :loser_rating loser-rating)))))))
          {:players {}
-          :match-count 0
-          :predictable-match-count 0
-          :correct-predictions 0})))))
+          :matches []})
+       :matches
+       reverse))))
 
+; Testing
+(def ratings (elo-db "match_scores_1991-2016_unindexed_csv.csv" 35))
+(map #(select-keys % [:winner_rating :loser_rating]) (take 5 ratings))
