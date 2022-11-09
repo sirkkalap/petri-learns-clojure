@@ -42,3 +42,20 @@
 ; Testing
 (def ratings (elo-db "match_scores_1991-2016_unindexed_csv.csv" 35))
 (map #(select-keys % [:winner_rating :loser_rating]) (take 5 ratings))
+
+(defn player-in-match? [{:keys [winner_slug loser_slug]} player-slug]
+  ((hash-set winner_slug loser_slug) player-slug))
+
+; Testing
+(player-in-match? (first ratings) "gael-monfils")
+(player-in-match? (first ratings) "boris-becker")
+
+(defn match-tree-by-player [m player-name]
+  (lazy-seq
+    #_(cond (empty? m)
+          ;; No more matches
+          (player-in-match? (first m) player-name)
+          ;; Build the tree!
+          ::otherwise
+          ;; Keep walking through the tree
+          )))
