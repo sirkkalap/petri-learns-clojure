@@ -110,8 +110,16 @@
   (cond (zero? limit)
         '()
         (= 1 limit)
-        (first tree)))
+        (first tree)
+        :otherwise-continue
+        (cons
+          (first tree)
+          (cons
+            [(take-matches (dec limit) (first (second tree)))
+             (take-matches (dec limit) (second (second tree)))]
+            '()))))
 
 ; Testing
 (take-matches 0 federer)
 (select-keys (take-matches 1 federer) [:winner_slug :loser_slug])
+(take-matches 3 federer)
