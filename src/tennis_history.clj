@@ -123,3 +123,36 @@
 (take-matches 0 federer)
 (select-keys (take-matches 1 federer) [:winner_slug :loser_slug])
 (take-matches 3 federer)
+(def federer (match-tree-by-player matches "roger-federer"))
+
+(defn take-matches [limit tree f]
+  (cond (zero? limit)
+        '()
+        (= 1 limit)
+        (f (first tree))
+        :otherwise-continue
+        (cons
+          (f (first tree))
+          (cons
+            [(take-matches (dec limit) (first (second tree)) f)
+             (take-matches (dec limit) (second (second tree)) f)]
+            '()))))
+
+; Testing
+(take-matches 3 federer #(select-keys % [:winner_slug :loser_slug]))
+
+(defn matches-with-ratings [limit tree]
+  (take-matches limit
+    tree
+    (fn [match]
+      (-> match
+        (update :winner_rating int)
+        (update :loser_rating int)
+        (select-keys [:winner_name :loser_name :winner_rating :loser_rating])
+        (assoc :winner_probability_percentage
+               (->> (match-probability (:winner_rating match)
+                      (:loser_rating match))
+                 (* 100)
+                 int))))))
+
+(matches-with-ratings 3 federer)

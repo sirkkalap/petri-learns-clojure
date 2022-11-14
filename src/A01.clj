@@ -1363,6 +1363,8 @@ alphabet
 
 ; Ex 7.04: A Custom take Function
 ; -> tennis_history.clj
+; Ex 7.05: Formatting the Matches
+; -> tennis_history.clj
 
 ; 11. Macros
 (defmacro minimal-macro []
