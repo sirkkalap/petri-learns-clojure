@@ -108,7 +108,10 @@
 
 (defn take-matches [limit tree]
   (cond (zero? limit)
-        '()))
+        '()
+        (= 1 limit)
+        (first tree)))
 
 ; Testing
 (take-matches 0 federer)
+(select-keys (take-matches 1 federer) [:winner_slug :loser_slug])
