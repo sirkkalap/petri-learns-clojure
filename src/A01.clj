@@ -1366,6 +1366,9 @@ alphabet
 ; Ex 7.05: Formatting the Matches
 ; -> tennis_history.clj
 
+; Ex 8.11: Using an External Library in a Leiningen Project
+; -> ex8/project.clj
+
 ; 11. Macros
 (defmacro minimal-macro []
   '(println "I'm your macro overlord!"))
