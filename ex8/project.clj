@@ -13,3 +13,10 @@
 ; Testing
 ; lein show-profiles
 ; lein with-profile dev test
+
+; Ex 8.14: Using User-Wide Profiles
+; -> ~/.lein/profiles.clj
+; {:user {:dependencies [[clojure-humanize "0.2.2"]]}}
+; REPL
+; (clojure.contrib.humanize/numberword 4589)
+; (clojure.contrib.humanize/duration 500)
