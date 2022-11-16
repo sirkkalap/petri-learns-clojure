@@ -1,6 +1,6 @@
 (ns ex8.core-test
   (:require [clojure.test :refer :all]
-            [ex8-11.core :refer :all]))
+            [ex8.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."
