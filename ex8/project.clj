@@ -5,4 +5,7 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [clojure.java-time "1.1.0"]]
-  :repl-options {:init-ns ex8.core})
+  :repl-options {:init-ns ex8.core}
+  ; Exe 8.13: Adding Leiningen Profiles to a Project
+  :profiles {:uberjar {:aot :all}
+             :dev {:dependencies [[expectations "2.1.10"]]}})
