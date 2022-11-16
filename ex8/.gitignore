@@ -1,6 +1,6 @@
-/target
-/classes
-/checkouts
+/target/
+/classes/
+/checkouts/
 profiles.clj
 pom.xml
 pom.xml.asc
@@ -11,3 +11,4 @@ pom.xml.asc
 .hgignore
 .hg/
 /.idea/
+/ex8.iml
