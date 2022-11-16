@@ -1366,8 +1366,11 @@ alphabet
 ; Ex 7.05: Formatting the Matches
 ; -> tennis_history.clj
 
-; Ex 8.11: Using an External Library in a Leiningen Project
+; Ex 8.*: Using an External Library in a Leiningen Project
 ; -> ex8/project.clj
+
+; Activity 8.03: Building a Format-Converting Application
+; -> act8/project.clj
 
 ; 11. Macros
 (defmacro minimal-macro []
