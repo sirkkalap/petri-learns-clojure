@@ -9,3 +9,7 @@
   ; Exe 8.13: Adding Leiningen Profiles to a Project
   :profiles {:uberjar {:aot :all}
              :dev {:dependencies [[expectations "2.1.10"]]}})
+
+; Testing
+; lein show-profiles
+; lein with-profile dev test
