@@ -1,13 +1,14 @@
 (ns act8.core
-  (:gen-class))
+  (:gen-class)
+  (:require [cheshire.core :as json]))
 
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
   (println "Hello, World!"))
 
-(defn generate-json-from-hash [h]
-  "j")
+(defn generate-hash-from-json [json]
+  (json/parse-string json))
 
-(defn generate-hash-from-json [j]
-  "h")
+(defn generate-json-from-hash [hash]
+  (json/generate-string hash))
