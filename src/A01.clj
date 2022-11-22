@@ -1372,6 +1372,15 @@ alphabet
 ; Activity 8.03: Building a Format-Converting Application
 ; -> act8/project.clj
 
+; 9. Host Platform Interoperability with Java and JavaScript
+(import 'java.math.BigDecimal)
+; BigDecimal big_number = new BigDecimal("100000");
+(new BigDecimal "100000")
+(def big-num (new BigDecimal "100000"))
+(def big-num (BigDecimal. "100000"))
+
+
+
 ; 11. Macros
 (defmacro minimal-macro []
   '(println "I'm your macro overlord!"))
