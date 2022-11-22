@@ -1379,7 +1379,21 @@ alphabet
 (def big-num (new BigDecimal "100000"))
 (def big-num (BigDecimal. "100000"))
 
-
+(import '[java.math BigDecimal BigInteger])
+(BigInteger. "10000")
+(BigDecimal. 100000.5)
+(import 'java.time.LocalTime 'java.util.Locale)
+(Locale. "pl")
+; LocalTime time = LocalTime.now();
+; System.out.println(time);
+(LocalTime/now)
+; LocalTime.NOON
+(LocalTime/MIDNIGHT)
+; Instance method
+(.negate big-num)
+; BigDecimal big_num = new BigDecimal("100000");
+; big_num.pow(2);
+(.pow big-num 2)
 
 ; 11. Macros
 (defmacro minimal-macro []
