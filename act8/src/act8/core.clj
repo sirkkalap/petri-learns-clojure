@@ -2,11 +2,6 @@
   (:gen-class)
   (:require [cheshire.core :as json]))
 
-(defn -main
-  "I don't do a whole lot ... yet."
-  [& args]
-  (println "Hello, World!"))
-
 (defn generate-hash-from-json [json]
   (json/parse-string json))
 
