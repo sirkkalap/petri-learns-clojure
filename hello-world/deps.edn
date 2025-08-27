@@ -1,0 +1,11 @@
+{:paths ["src" "resources"]
+
+ :deps {org.clojure/clojure {:mvn/version "1.11.1"}}
+
+ :aliases
+ {:run
+  {:main-opts ["-m" "hello-world.core"]}
+
+  :uberjar
+  {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]
+   :exec-fn hello-world.core/-main}}}
